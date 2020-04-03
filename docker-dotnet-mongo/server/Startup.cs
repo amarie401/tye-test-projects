@@ -29,7 +29,9 @@ namespace TodoApp
         public void ConfigureServices(IServiceCollection services)
         {
             var config = new ServerConfig();
-            Configuration.Bind(config);           
+            Configuration.Bind(config);  
+            config.MongoDB.Host=Configuration["service:mongo:host"];
+            config.MongoDB.Port=int.Parse(Configuration["service:mongo:port"]);         
 
             var todoContext = new TodoContext(config.MongoDB);
             var repo = new TodoRepository(todoContext);

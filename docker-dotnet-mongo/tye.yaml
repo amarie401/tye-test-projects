@@ -1,0 +1,34 @@
+services:
+- name: mongo
+  image: mongo
+  bindings:
+    - containerPort: 27017
+  env:
+    - name: MONGO_INITDB_ROOT_USERNAME
+      value: root
+    - name: MONGO_INITDB_ROOT_PASSWORD
+      value: example
+
+- name: mongo-express
+  image: mongo-express
+  bindings:
+    - containerPort: 8081
+  env:
+    - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+      value: root
+    - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+      value: example
+
+- name: todo-server
+  project: server/TodoApp.csproj
+
+  #TODO: 
+  #  todo-client:
+  #       build: ./client
+  #       restart: always
+  #       environment:
+  #         - NODE_ENV=production
+  #       ports:
+  #         - 8080:80
+  #       depends_on:
+  #         - todo-server
