@@ -1,0 +1,17 @@
+name: musicstore
+services:
+- name: musicstore
+  project: samples/MusicStore/MusicStore.csproj
+
+
+- name: mssql-server
+  image: microsoft/mssql-server-windows-developer
+  env:
+  - name: "sa_password"
+    value: "Password1"
+  - name: ACCEPT_EULA
+    value: "Y"
+  bindings:
+  - containerPort: 1433
+    connectionString: Server=${host},${port};Database=MusicStore;User Id=sa;Password=${env:sa_password};MultipleActiveResultSets=True
+    
