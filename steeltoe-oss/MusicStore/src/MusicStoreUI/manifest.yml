@@ -1,0 +1,14 @@
+---
+applications:
+- name: musicui
+  buildpacks:
+   - dotnet_core_buildpack
+  memory: 512M
+  command: cd ${HOME} && ./MusicStoreUI
+  env:
+    ASPNETCORE_ENVIRONMENT: Production
+  services:
+   - mStoreRegistry
+   - mStoreConfig
+   - mStoreAccountsDB
+   - mStoreHystrix
