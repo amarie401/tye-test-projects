@@ -16,16 +16,19 @@ services:
     - target: /config
   bindings:
     - containerPort: 8888
+      protocol: http
   
 - name: eureka
   image: steeltoeoss/eurekaserver:1.4.4
   bindings:
     - containerPort: 8761  
+      protocol: http
 
 - name: mysql
   image: mysql:5.7
   bindings:
     - containerPort: 3306
+      protocol: http
   env:
     - name: MYSQL_ROOT_PASSWORD
       value: steeltoe
