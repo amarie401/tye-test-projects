@@ -3,6 +3,7 @@ services:
   image: mongo
   bindings:
     - containerPort: 27017
+      protocol: http
   env:
     - name: MONGO_INITDB_ROOT_USERNAME
       value: root
@@ -13,6 +14,7 @@ services:
   image: mongo-express
   bindings:
     - containerPort: 8081
+      protocol: http
   env:
     - name: ME_CONFIG_MONGODB_ADMINUSERNAME
       value: root
@@ -22,13 +24,8 @@ services:
 - name: todo-server
   project: server/TodoApp.csproj
 
-  #TODO: 
-  #  todo-client:
-  #       build: ./client
-  #       restart: always
-  #       environment:
-  #         - NODE_ENV=production
-  #       ports:
-  #         - 8080:80
-  #       depends_on:
-  #         - todo-server
+- name: todo-client
+  dockerFile: "./client/Dockerfile"
+  bindings:
+    - containerPort: 80
+      protocol: http
