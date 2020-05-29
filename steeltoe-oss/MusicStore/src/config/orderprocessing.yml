@@ -1,8 +1,6 @@
 eureka:
   client:
     shouldFetchRegistry: false
-  instance:
-    port: 7000
 mysql:
   client:
     database: steeltoe3

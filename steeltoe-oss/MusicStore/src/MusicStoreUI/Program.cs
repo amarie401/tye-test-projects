@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,32 +17,30 @@ namespace MusicStoreUI
         {
             IConfiguration config = null;
 
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseCloudFoundryHosting(5555)
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
+            var host = WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .ConfigureAppConfiguration((builderContext, configBuilder) =>
-                {
-                    var env = builderContext.HostingEnvironment;
-                    configBuilder.SetBasePath(env.ContentRootPath)
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                        .AddEnvironmentVariables()
-                        .AddConfigServer(env.EnvironmentName);
+                .ConfigureAppConfiguration((builderContext, configBuilder) => {
+                    configBuilder.AddConfigServer(builderContext.HostingEnvironment.EnvironmentName, GetLoggerFactory());
                     config = configBuilder.Build();
                 })
-                .ConfigureLogging((context, builder) =>
-                {
-                    builder.AddConfiguration(context.Configuration.GetSection("Logging"));
-                    builder.AddDynamicConsole();
-                })
+                .ConfigureLogging((context, builder) => builder.AddDynamicConsole())
                 .Build();
 
             SeedDatabase(host, config);
 
             host.Run();
+        }
+
+        public static ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
+            serviceCollection.AddLogging(builder => builder.AddConsole((opts) =>
+            {
+                opts.DisableColors = true;
+            }));
+            serviceCollection.AddLogging(builder => builder.AddDebug());
+            return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
         }
 
         private static void SeedDatabase(IWebHost host, IConfiguration config)
@@ -58,6 +57,7 @@ namespace MusicStoreUI
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the DB.");
+                    throw;
                 }
             }
         }

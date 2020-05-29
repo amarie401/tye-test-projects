@@ -15,9 +15,17 @@ using Steeltoe.Security.DataProtection;
 #endif
 
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
-using Steeltoe.Management.CloudFoundry;
 using Steeltoe.CircuitBreaker.Hystrix;
 using Command = MusicStoreUI.Services.HystrixCommands;
+using Steeltoe.CloudFoundry.Connector;
+using Steeltoe.Management.Endpoint.Health;
+using Steeltoe.Management.Endpoint.Hypermedia;
+using Steeltoe.Management.Endpoint.Info;
+using Steeltoe.Management.Endpoint.Loggers;
+using Steeltoe.Management.Endpoint.Mappings;
+using Steeltoe.Management.Endpoint.Trace;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace MusicStoreUI
 {
@@ -33,7 +41,8 @@ namespace MusicStoreUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            var connMgr = new ConnectionStringManager(Configuration);
+            
             // Add framework services.
 #if USE_REDIS_CACHE
             services.AddRedisConnectionMultiplexer(Configuration);
@@ -46,7 +55,12 @@ namespace MusicStoreUI
 #endif
 
             // Add managment endpoint services
-            services.AddCloudFoundryActuators(Configuration);
+            services.AddHypermediaActuator(Configuration);
+            services.AddInfoActuator(Configuration);
+            services.AddHealthActuator(Configuration);
+            services.AddLoggersActuator(Configuration);
+            services.AddTraceActuator(Configuration);
+            services.AddMappingsActuator(Configuration);
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
@@ -103,7 +117,12 @@ namespace MusicStoreUI
             app.UseHystrixRequestContext();
 
             // Add management endpoints into pipeline
-            app.UseCloudFoundryActuators();
+            app.UseHypermediaActuator();
+            app.UseInfoActuator();
+            app.UseHealthActuator();
+            app.UseLoggersActuator();
+            app.UseTraceActuator();
+            app.UseMappingsActuator();
 
             app.UseSession();
 

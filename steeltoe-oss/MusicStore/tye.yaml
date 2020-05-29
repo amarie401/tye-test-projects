@@ -2,38 +2,43 @@ name: musicstore
 services:
 - name: musicstoreservice
   project: src/MusicStoreService/MusicStoreService.csproj
-- name: musicstoreui
-  project: src/MusicStoreUI/MusicStoreUI.csproj
 - name: orderservice
   project: src/OrderService/OrderService.csproj
 - name: shoppingcartservice
   project: src/ShoppingCartService/ShoppingCartService.csproj
+- name: musicstoreui
+  project: src/MusicStoreUI/MusicStoreUI.csproj
 
-- name: config-server
+- name: configserver
   image: steeltoeoss/configserver:1.3.2
+  env:
+    - name: spring.profiles.active
+      value: native
   volumes:
-    - source: ./src/config
-    - target: /config
+    - source: ./src/config/
+      target: /config
   bindings:
     - containerPort: 8888
+      port: 8888
       protocol: http
   
 - name: eureka
   image: steeltoeoss/eurekaserver:1.4.4
   bindings:
-    - containerPort: 8761  
+    - containerPort: 8761
+      port: 8761
       protocol: http
 
 - name: mysql
   image: mysql:5.7
   bindings:
-    - containerPort: 3306
-      protocol: http
+    - port: 3306
+      protocol: mysql
   env:
     - name: MYSQL_ROOT_PASSWORD
       value: steeltoe
     - name: MYSQL_DATABASE
-      value: steeltoe
+      value: steeltoe2
     - name: MYSQL_USER
       value: steeltoe
     - name: MYSQL_PASSWORD

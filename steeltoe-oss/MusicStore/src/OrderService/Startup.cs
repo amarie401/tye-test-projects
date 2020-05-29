@@ -5,7 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using OrderService.Models;
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
 using Steeltoe.Discovery.Client;
-using Steeltoe.Management.CloudFoundry;
+using Steeltoe.Management.Endpoint.Health;
+using Steeltoe.Management.Endpoint.Hypermedia;
+using Steeltoe.Management.Endpoint.Info;
+using Steeltoe.Management.Endpoint.Loggers;
+using Steeltoe.Management.Endpoint.Mappings;
+using Steeltoe.Management.Endpoint.Trace;
 
 namespace OrderService
 {
@@ -22,7 +27,12 @@ namespace OrderService
         public void ConfigureServices(IServiceCollection services)
         {
             // Add managment endpoint services
-            services.AddCloudFoundryActuators(Configuration);
+            services.AddHypermediaActuator(Configuration);
+            services.AddInfoActuator(Configuration);
+            services.AddHealthActuator(Configuration);
+            services.AddLoggersActuator(Configuration);
+            services.AddTraceActuator(Configuration);
+            services.AddMappingsActuator(Configuration);
 
             // Add framework services.
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -39,7 +49,12 @@ namespace OrderService
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Add management endpoints into pipeline
-            app.UseCloudFoundryActuators();
+            app.UseHypermediaActuator();
+            app.UseInfoActuator();
+            app.UseHealthActuator();
+            app.UseLoggersActuator();
+            app.UseTraceActuator();
+            app.UseMappingsActuator();
 
             app.UseMvc();
 

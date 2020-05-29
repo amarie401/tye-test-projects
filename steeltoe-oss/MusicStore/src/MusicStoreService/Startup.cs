@@ -5,7 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using MusicStore.Models;
 using Steeltoe.Discovery.Client;
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
-using Steeltoe.Management.CloudFoundry;
+using Steeltoe.Management.Endpoint.Health;
+using Steeltoe.Management.Endpoint.Hypermedia;
+using Steeltoe.Management.Endpoint.Info;
+using Steeltoe.Management.Endpoint.Loggers;
+using Steeltoe.Management.Endpoint.Mappings;
+using Steeltoe.Management.Endpoint.Trace;
 
 namespace MusicStore
 {
@@ -22,7 +27,12 @@ namespace MusicStore
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Steeltoe Management services
-            services.AddCloudFoundryActuators(Configuration);
+            services.AddHypermediaActuator(Configuration);
+            services.AddInfoActuator(Configuration);
+            services.AddHealthActuator(Configuration);
+            services.AddLoggersActuator(Configuration);
+            services.AddTraceActuator(Configuration);
+            services.AddMappingsActuator(Configuration);
 
             // Add framework services.
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -41,7 +51,12 @@ namespace MusicStore
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Add Steeltoe Management endpoints into pipeline
-            app.UseCloudFoundryActuators();
+            app.UseHypermediaActuator();
+            app.UseInfoActuator();
+            app.UseHealthActuator();
+            app.UseLoggersActuator();
+            app.UseTraceActuator();
+            app.UseMappingsActuator();
 
             app.UseMvc(routes =>
             {

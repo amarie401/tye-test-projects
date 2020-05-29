@@ -10,11 +10,18 @@ Logging:
 
 eureka:
   client:
-    serviceUrl: http://localhost:8761/eureka/
+    serviceUrl: http://eureka:8761/eureka/
+  instance:
+    preferIpAddress: true
 mysql:
   client:
-    server: localhost
+    server: mysql
     sslmode: none
 redis:
   client:
-    host: localhost
+    host: redis
+management:
+  endpoints:
+    actuator:
+      exposure:
+        include: [ "*" ]
