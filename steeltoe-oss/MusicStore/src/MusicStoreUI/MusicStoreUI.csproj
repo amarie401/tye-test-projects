@@ -6,7 +6,6 @@
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
-  <Import Project="..\..\..\config\versions.props" />
   
   <ItemGroup>
     <None Update="wwwroot\**\*;Views\**\*;Areas\Admin\Views\**\*">
@@ -21,23 +20,23 @@
   </ItemGroup>
   <ItemGroup>
     <!-- GitInfo provides $(Git*) properties used below -->
-    <PackageReference Include="GitInfo" Version="$(GitInfoVersion)">
+    <PackageReference Include="GitInfo" Version="2.0.26">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(EFCoreVersion)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
-    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.CircuitBreaker.HystrixCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.CircuitBreaker.Hystrix.MetricsEventsCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.ConnectorCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.Connector.EFCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.Management.EndpointCore" Version="$(SteeltoeVersion)" />
-    <PackageReference Include="Steeltoe.Security.DataProtection.RedisCore" Version="$(SteeltoeVersion)" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.CircuitBreaker.HystrixCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.CircuitBreaker.Hystrix.MetricsEventsCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.ConnectorCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.Connector.EFCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.Management.EndpointCore" Version="3.0.0-2791" />
+    <PackageReference Include="Steeltoe.Security.DataProtection.RedisCore" Version="3.0.0-2791" />
   </ItemGroup>
   <Target Name="_GitProperties" AfterTargets="CoreCompile">
     <WriteLinesToFile File="git.properties" Lines="git.remote.origin.url=$(GitRoot)" Overwrite="true" />

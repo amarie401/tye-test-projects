@@ -10,18 +10,22 @@ services:
         target: /config
     ports:
       - "8888:8888"
-  eurekaserver:
+  eureka:
     image: steeltoeoss/eurekaserver
     ports:
       - "8761:8761"
-  spring-boot-admin:
+  bootadmin:
      image: slydeveloper/spring-boot-admin
      ports:
        - "8889:1111"
      environment:
        SPRING_BOOT_ADMIN_SECURITY_ENABLED: "false"
      depends_on:
-       - eurekaserver
+       - eureka
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
   mysql:
     image: mysql:5.7
     ports:
@@ -33,8 +37,8 @@ services:
       MYSQL_PASSWORD: steeltoe
     depends_on:
       - configserver
-      - eurekaserver
-      - spring-boot-admin
+      - eureka
+      - bootadmin
   zipkinserver:
     image: openzipkin/zipkin
     ports:
@@ -46,25 +50,25 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - configserver
-      - eurekaserver
+      - eureka
       - mysql
-  shoppingcartservice:
+  shoppingcart:
     image: ${DOCKER_REGISTRY-}shoppingcartservice
     build:
       context: ./src/ShoppingCartService
       dockerfile: Dockerfile
     depends_on:
       - configserver
-      - eurekaserver
+      - eureka
       - mysql
-  orderservice:
+  orderprocessing:
     image: ${DOCKER_REGISTRY-}orderservice
     build:
       context: ./src/OrderService
       dockerfile: Dockerfile
     depends_on:
       - configserver
-      - eurekaserver
+      - eureka
       - mysql
   musicstore:
     image: ${DOCKER_REGISTRY-}musicstore
@@ -73,8 +77,10 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - configserver
-      - eurekaserver
+      - eureka
       - musicservice
-      - shoppingcartservice
-      - orderservice
+      - shoppingcart
+      - orderprocessing
       - mysql
+    ports:
+      - "5555:80"
