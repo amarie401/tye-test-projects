@@ -7,7 +7,7 @@ using MusicStoreUI.Models;
 using Steeltoe.Extensions.Configuration.ConfigServer;
 using Steeltoe.Extensions.Logging;
 using System;
-using System.IO;
+using System.Diagnostics;
 
 namespace MusicStoreUI
 {
@@ -15,6 +15,8 @@ namespace MusicStoreUI
     {
         public static void Main(string[] args)
         {
+            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+
             IConfiguration config = null;
 
             var host = WebHost.CreateDefaultBuilder(args)
@@ -23,7 +25,7 @@ namespace MusicStoreUI
                     configBuilder.AddConfigServer(builderContext.HostingEnvironment.EnvironmentName, GetLoggerFactory());
                     config = configBuilder.Build();
                 })
-                .ConfigureLogging((context, builder) => builder.AddDynamicConsole())
+                .ConfigureLogging((context, builder) => builder.AddDynamicConsole(true))
                 .Build();
 
             SeedDatabase(host, config);
@@ -31,7 +33,7 @@ namespace MusicStoreUI
             host.Run();
         }
 
-        public static ILoggerFactory GetLoggerFactory()
+        private static ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
@@ -45,20 +47,18 @@ namespace MusicStoreUI
 
         private static void SeedDatabase(IWebHost host, IConfiguration config)
         {
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
 
-                try
-                {
-                    SampleData.InitializeAccountsDatabase(services, config);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB.");
-                    throw;
-                }
+            try
+            {
+                SampleData.InitializeAccountsDatabase(services, config);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred seeding the DB.");
+                throw;
             }
         }
     }

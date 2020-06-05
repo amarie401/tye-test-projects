@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.128
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicStoreService", "src\MusicStoreService\MusicStoreService.csproj", "{9507C4C7-2EDE-4948-9D0A-DEFDCE8A569E}"
 EndProject
@@ -14,6 +14,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6D07EFD-13C8-48A5-834F-E1F72D0F7DCA}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		tye.yaml = tye.yaml
+	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{54B3E7C4-7F15-4963-BD65-95B1E87A1C5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{D1999DB9-23CD-4F67-BB43-93354990C053}"
+	ProjectSection(SolutionItems) = preProject
+		src\config\application.yml = src\config\application.yml
+		src\config\musicservice.yml = src\config\musicservice.yml
+		src\config\musicstore.yml = src\config\musicstore.yml
+		src\config\orderprocessing.yml = src\config\orderprocessing.yml
+		src\config\shoppingcart.yml = src\config\shoppingcart.yml
 	EndProjectSection
 EndProject
 Global
@@ -38,6 +50,10 @@ Global
 		{A216599F-51BE-48A0-949E-E00F391DEDB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A216599F-51BE-48A0-949E-E00F391DEDB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A216599F-51BE-48A0-949E-E00F391DEDB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54B3E7C4-7F15-4963-BD65-95B1E87A1C5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B3E7C4-7F15-4963-BD65-95B1E87A1C5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54B3E7C4-7F15-4963-BD65-95B1E87A1C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54B3E7C4-7F15-4963-BD65-95B1E87A1C5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

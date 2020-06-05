@@ -2,11 +2,13 @@ AppSettings:
   SiteTitle: Music Store
   CacheDbResults: true
 Logging: 
-  IncludeScopes: false
+  IncludeScopes: true
   LogLevel: 
-    Default: Debug
-    System: Information
-    Microsoft: Information
+    Default: Information
+    System: Warning
+    Microsoft: Warning
+    Steeltoe.Discovery: Debug
+    Steeltoe.Management.Endpoint: Information
 
 eureka:
   client:
@@ -25,3 +27,8 @@ management:
     actuator:
       exposure:
         include: [ "*" ]
+spring:
+  boot:
+    admin:
+      client:
+        url: http://bootadmin:1111

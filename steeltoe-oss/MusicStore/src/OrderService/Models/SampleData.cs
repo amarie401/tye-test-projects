@@ -18,14 +18,12 @@ namespace OrderService.Models
             if (ShouldDropCreateDatabase())
             {
 
-                using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    var db = serviceScope.ServiceProvider.GetService<OrdersContext>();
+                using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var db = serviceScope.ServiceProvider.GetService<OrdersContext>();
 
-                    db.Database.EnsureCreated();
+                db.Database.EnsureCreated();
 
-                    InsertTestData(serviceProvider);
-                }
+                InsertTestData(serviceProvider);
             }
         }
 

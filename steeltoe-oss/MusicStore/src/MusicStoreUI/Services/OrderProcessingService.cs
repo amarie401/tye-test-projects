@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MusicStoreUI.Models;
 using System.Net.Http;
-using Steeltoe.Common.Discovery;
+using System.Threading.Tasks;
 
 namespace MusicStoreUI.Services
 {
@@ -13,7 +9,8 @@ namespace MusicStoreUI.Services
     {
         private const string ORDER_URL = "http://orderprocessing/api/Order";
 
-        public OrderProcessingService(IDiscoveryClient client, ILoggerFactory logFactory) : base(client, logFactory.CreateLogger<OrderProcessingService>())
+        public OrderProcessingService(HttpClient client, ILoggerFactory logFactory)
+            : base(client, logFactory.CreateLogger<OrderProcessingService>())
         {
         }
 

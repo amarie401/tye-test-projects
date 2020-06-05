@@ -1,6 +1,6 @@
 ---
 applications:
-- name: musicui
+- name: musicstore
   buildpacks:
    - dotnet_core_buildpack
   memory: 512M
@@ -11,4 +11,5 @@ applications:
    - mStoreRegistry
    - mStoreConfig
    - mStoreAccountsDB
+   - mStoreRedis
    - mStoreHystrix

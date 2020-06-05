@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShoppingCartService.Models;
-using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
+using Steeltoe.Connector.MySql.EFCore;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Hypermedia;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Loggers;
 using Steeltoe.Management.Endpoint.Mappings;
+using Steeltoe.Management.Endpoint.SpringBootAdminClient;
 using Steeltoe.Management.Endpoint.Trace;
 
 namespace ShoppingCartService
@@ -35,7 +36,7 @@ namespace ShoppingCartService
             services.AddMappingsActuator(Configuration);
 
             // Add framework services.
-            services.AddMvc();
+            services.AddControllers();
 
             services.AddDiscoveryClient(Configuration);
 
@@ -43,9 +44,11 @@ namespace ShoppingCartService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-             // Add management endpoints into pipeline
+            app.UseRouting();
+
+            // Add management endpoints into pipeline
             app.UseHypermediaActuator();
             app.UseInfoActuator();
             app.UseHealthActuator();
@@ -53,7 +56,12 @@ namespace ShoppingCartService
             app.UseTraceActuator();
             app.UseMappingsActuator();
 
-            app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            
+            app.RegisterSpringBootAdmin(Configuration);
 
             app.UseDiscoveryClient();
         }

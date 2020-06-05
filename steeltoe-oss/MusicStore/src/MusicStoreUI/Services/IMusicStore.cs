@@ -31,7 +31,5 @@ namespace MusicStoreUI.Services
         Task<bool> RemoveAlbumAsync(Album album);
 
         Task<Album> GetAlbumAsync(string title);
-
-
     }
 }

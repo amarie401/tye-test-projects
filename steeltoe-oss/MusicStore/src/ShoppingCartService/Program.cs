@@ -7,6 +7,8 @@ using ShoppingCartService.Models;
 using Steeltoe.Extensions.Logging;
 using System;
 using Microsoft.AspNetCore;
+using System.Diagnostics;
+using System.Threading;
 
 namespace ShoppingCartService
 {
@@ -14,10 +16,12 @@ namespace ShoppingCartService
     {
         public static void Main(string[] args)
         {
+            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+
             var host = WebHost.CreateDefaultBuilder()
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((builderContext, configBuilder) => configBuilder.AddConfigServer(builderContext.HostingEnvironment.EnvironmentName, GetLoggerFactory()))
-                .ConfigureLogging((context, builder) => builder.AddDynamicConsole())
+                .ConfigureLogging((context, builder) => builder.AddDynamicConsole(true))
                 .Build();
 
             SeedDatabase(host);
@@ -25,7 +29,7 @@ namespace ShoppingCartService
             host.Run();
         }
 
-        public static ILoggerFactory GetLoggerFactory()
+        private static ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
@@ -39,20 +43,18 @@ namespace ShoppingCartService
 
         private static void SeedDatabase(IWebHost host)
         {
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
 
-                try
-                {
-                    SampleData.InitializeShoppingCartDatabase(services);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB.");
-                    throw;
-                }
+            try
+            {
+                SampleData.InitializeShoppingCartDatabase(services);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred seeding the DB.");
+                throw;
             }
         }
     }

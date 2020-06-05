@@ -1,13 +1,18 @@
 eureka:
   client:
-    shouldFetchRegistry: false
+    shouldRegisterWithEureka: false
 mysql:
   client:
-    database: steeltoe
+    database: store
     username: root
     password: steeltoe
-postgres:
+redis:
   client:
-    database: steeltoe
-    username: steeltoe
-    password: steeltoe
+    host: redis
+DefaultAdminUsername: Administrator@test.com
+DefaultAdminPassword: YouShouldChangeThisPassword1!
+spring:
+  boot:
+    admin:
+      client:
+        basePath: https://musicstoreui/

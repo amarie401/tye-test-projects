@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShoppingCartService.Models
 {
@@ -32,13 +30,13 @@ namespace ShoppingCartService.Models
 
         public static List<CartItemJson> From(List<CartItem> items)
         {
-            List<CartItemJson> results = new List<CartItemJson>();
+            var results = new List<CartItemJson>();
             if (items == null)
                 return results;
 
             foreach (var a in items)
             {
-                results.Add(CartItemJson.From(a));
+                results.Add(From(a));
             }
             return results;
         }

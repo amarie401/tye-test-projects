@@ -1,13 +1,28 @@
 name: musicstore
+
+extensions:
+- name: zipkin
+
 services:
 - name: musicstoreservice
   project: src/MusicStoreService/MusicStoreService.csproj
+  bindings:
+    - protocol: http
+  replicas: 2
 - name: orderservice
   project: src/OrderService/OrderService.csproj
+  bindings:
+    - protocol: http
+  replicas: 2
 - name: shoppingcartservice
   project: src/ShoppingCartService/ShoppingCartService.csproj
+  bindings:
+    - protocol: http
+  replicas: 2
 - name: musicstoreui
   project: src/MusicStoreUI/MusicStoreUI.csproj
+  bindings:
+    - protocol: https
 
 - name: configserver
   image: steeltoeoss/configserver:1.3.2
@@ -43,3 +58,18 @@ services:
       value: steeltoe
     - name: MYSQL_PASSWORD
       value: steeltoe
+
+- name: bootadmin
+  image: slydeveloper/spring-boot-admin
+  bindings:
+    - containerPort: 1111
+      port: 1111
+      protocol: http
+  env:
+    - name: SPRING_BOOT_ADMIN_SECURITY_ENABLED
+      value: false
+
+- name: redis
+  image: redis
+  bindings:
+    - port: 6379

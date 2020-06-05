@@ -1,6 +1,6 @@
 ---
 applications:
-- name: musicui
+- name: musicstore
   memory: 512M
   stack: windows
   command: .\MusicStoreUI
@@ -10,4 +10,5 @@ applications:
    - mStoreRegistry
    - mStoreConfig
    - mStoreAccountsDB
+   - mStoreRedis
    - mStoreHystrix

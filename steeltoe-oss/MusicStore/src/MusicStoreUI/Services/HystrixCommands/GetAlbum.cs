@@ -107,11 +107,11 @@ namespace MusicStoreUI.Services.HystrixCommands
 
             if (string.IsNullOrEmpty(_name))
             {
-                result = Model.SampleData.FallbackAlbums.Where((p) => p.AlbumId == _intId).SingleOrDefault();
+                result = Model.SampleData.FallbackAlbums.SingleOrDefault((p) => p.AlbumId == _intId);
             }
             else
             {
-                result = Model.SampleData.FallbackAlbums.Where((p) => p.Title == _name).SingleOrDefault();
+                result = Model.SampleData.FallbackAlbums.SingleOrDefault((p) => p.Title == _name);
             }
             _logger.LogInformation("Back");
 

@@ -21,12 +21,10 @@ namespace MusicStoreUI.Models
             if (ShouldDropCreateDatabase())
             {
 
-                using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    var db = serviceScope.ServiceProvider.GetService<AccountsContext>();
-                    db.Database.EnsureCreated();
-                    CreateAdminUser(serviceProvider, configuration).Wait();
-                }
+                using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var db = serviceScope.ServiceProvider.GetService<AccountsContext>();
+                db.Database.EnsureCreated();
+                CreateAdminUser(serviceProvider, configuration).Wait();
             }
 
             BuildFallbackData();

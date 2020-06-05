@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderService.Models;
-using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
+using Steeltoe.Connector.MySql.EFCore;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Hypermedia;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Loggers;
 using Steeltoe.Management.Endpoint.Mappings;
+using Steeltoe.Management.Endpoint.SpringBootAdminClient;
 using Steeltoe.Management.Endpoint.Trace;
 
 namespace OrderService
@@ -38,7 +39,7 @@ namespace OrderService
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // Add framework services.
-            services.AddMvc();
+            services.AddControllers();
 
             services.AddDiscoveryClient(Configuration);
 
@@ -46,8 +47,10 @@ namespace OrderService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRouting();
+
             // Add management endpoints into pipeline
             app.UseHypermediaActuator();
             app.UseInfoActuator();
@@ -56,7 +59,14 @@ namespace OrderService
             app.UseTraceActuator();
             app.UseMappingsActuator();
 
-            app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+            
+            app.RegisterSpringBootAdmin(Configuration);
 
             app.UseDiscoveryClient();
         }

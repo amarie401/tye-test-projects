@@ -4,13 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MusicStore.Models;
 using Steeltoe.Discovery.Client;
-using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
+using Steeltoe.Connector.MySql.EFCore;
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Hypermedia;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Loggers;
 using Steeltoe.Management.Endpoint.Mappings;
 using Steeltoe.Management.Endpoint.Trace;
+using Steeltoe.Management.Endpoint.SpringBootAdminClient;
 
 namespace MusicStore
 {
@@ -44,12 +45,14 @@ namespace MusicStore
             services.AddDbContext<MusicStoreContext>(options => options.UseMySql(Configuration));
 
             // Add Framework services
-            services.AddMvc();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRouting();
+
             // Add Steeltoe Management endpoints into pipeline
             app.UseHypermediaActuator();
             app.UseInfoActuator();
@@ -58,18 +61,18 @@ namespace MusicStore
             app.UseTraceActuator();
             app.UseMappingsActuator();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
-
-                routes.MapRoute(
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
                     name: "api",
-                    template: "{controller}/{id?}");
+                    pattern: "{controller}/{id?}");
             });
-
+            
+            app.RegisterSpringBootAdmin(Configuration);
+            
             // Start Steeltoe Discovery services
             app.UseDiscoveryClient();
         }

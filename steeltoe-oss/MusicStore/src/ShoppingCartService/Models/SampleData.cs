@@ -15,14 +15,12 @@ namespace ShoppingCartService.Models
         {
             if (ShouldDropCreateDatabase())
             {
-                using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    var db = serviceScope.ServiceProvider.GetService<ShoppingCartContext>();
+                using var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var db = serviceScope.ServiceProvider.GetService<ShoppingCartContext>();
 
-                    db.Database.EnsureCreated();
+                db.Database.EnsureCreated();
 
-                    InsertTestData(serviceProvider);
-                }
+                InsertTestData(serviceProvider);
             }
         }
 

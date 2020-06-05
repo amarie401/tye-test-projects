@@ -3,11 +3,11 @@ eureka:
     shouldFetchRegistry: false
 mysql:
   client:
-    database: steeltoe1
+    database: cart
     username: root
     password: steeltoe
-postgres:
-  client:
-    database: steeltoe1
-    username: steeltoe
-    password: steeltoe
+spring:
+  boot:
+    admin:
+      client:
+        basePath: http://shoppingcartservice/

@@ -3,11 +3,11 @@ eureka:
     shouldFetchRegistry: false
 mysql:
   client:
-    database: orders
+    database: music
     username: root
     password: steeltoe
 spring:
   boot:
     admin:
       client:
-        basePath: http://orderservice/
+        basePath: http://musicstoreservice/
